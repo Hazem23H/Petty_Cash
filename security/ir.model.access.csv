@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_petty_cash_user,access_petty_cash_user,model_petty_cash_requests,group_petty_cash_user,1,0,0,0
+access_petty_cash_manager,access_petty_cash_manager,model_petty_cash_requests,group_petty_cash_manager,1,1,1,1
+access_dep_approver,access_dep_approver,model_petty_cash_requests,group_dep_approver,1,1,0,0
+access_acc_approver,access_acc_approver,model_petty_cash_requests,group_acc_approver,1,1,0,0
+access_hq_approver,access_hq_approver,model_petty_cash_requests,group_hq_approver,1,1,0,0

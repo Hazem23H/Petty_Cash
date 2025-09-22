@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_petty_cash"
+              name="Petty Cash"
+    />
+
+    <menuitem id="menu_petty_cash_requests"
+              name="Requests"
+              parent="menu_petty_cash"
+              action="action_requests_tree"
+              sequence="10"
+    />
+
+</odoo>
