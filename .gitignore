@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# IDE / editor settings
+.vscode/
+.idea/
+
+# Odoo specific
+*.log
+*.swp
+*.pyc
+*.pyo
+*.pot
+*.mo
+*.iml
+*.db
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
