@@ -21,32 +21,26 @@
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,dep_approval,acc_approval,hq_approval,approved,released,cancelled"/>
 
-                    <!-- Submit: only visible in draft, only for petty cash users -->
                     <button name="action_submit" type="object" string="Submit"
                             invisible="state != 'draft'"
                             groups="petty_cash.group_petty_cash_user"/>
 
-                    <!-- Dept approve: only visible when state == 'submitted' and only for dept approvers -->
                     <button name="action_dep_approve" type="object" string="Dept Approve"
                             invisible="state != 'dep_approval'"
                             groups="petty_cash.group_dep_approver"/>
 
-                    <!-- Accountant approve -->
                     <button name="action_acc_approve" type="object" string="Accountant Approve"
                             invisible="state != 'acc_approval'"
                             groups="petty_cash.group_acc_approver"/>
 
-                    <!-- HQ approve -->
                     <button name="action_hq_approve" type="object" string="HQ Approve"
                             invisible="state != 'hq_approval'"
                             groups="petty_cash.group_hq_approver"/>
 
-                    <!-- Release (manager) -->
                     <button name="action_release" type="object" string="Release"
                             invisible="state != 'approved'"
                             groups="petty_cash.group_petty_cash_manager"/>
 
-                    <!-- Cancel: visible to user & manager unless already released/cancelled -->
                     <button name="action_cancel" type="object" string="Cancel"
                             invisible="state in ['released','cancelled']"
                             groups="petty_cash.group_petty_cash_user,petty_cash.group_petty_cash_manager"/>

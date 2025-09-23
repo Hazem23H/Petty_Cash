@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 
 
 class PettyCashRequests(models.Model):
@@ -12,8 +13,18 @@ class PettyCashRequests(models.Model):
     request_amount = fields.Float(string="Request Amount")
     project_id = fields.Many2one("project.project", string="Project")
     description = fields.Text(string="Description")
-    cash_in_hand = fields.Float(string="Cash in Hand", readonly = True)
-    petty_cash_limit = fields.Float(string="Petty Cash Limit", readonly = True)
+    petty_cash_limit = fields.Float(
+        string="Petty Cash Limit",
+        related="employee_name.petty_cash_limit",
+        store=True,
+        readonly=True
+    )
+    cash_in_hand = fields.Float(
+        string="Cash in Hand",
+        related="employee_name.approved_petty_cash_total",
+        store=True,
+        readonly=True
+    )
     remining_petty_cash_balance = fields.Float(string="Remaining Petty Cash Balance")
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -39,7 +50,13 @@ class PettyCashRequests(models.Model):
         self.state = 'approved'
 
     def action_approve(self):
-        self.state = 'approved'
+        for rec in self:
+            if rec.request_amount <= 0:
+                raise UserError("Request amount must be greater than zero.")
+            if rec.request_amount > rec.petty_cash_limit + rec.request_amount:
+                raise UserError("Request exceeds the petty cash limit.")
+            rec.employee_name.approved_petty_cash_total += rec.request_amount
+            rec.state = "approved"
 
     def action_release(self):
         self.state = 'released'
