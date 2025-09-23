@@ -16,16 +16,14 @@ class PettyCashRequests(models.Model):
     petty_cash_limit = fields.Float(
         string="Petty Cash Limit",
         related="employee_name.petty_cash_limit",
-        store=True,
         readonly=True
     )
     cash_in_hand = fields.Float(
         string="Cash in Hand",
         related="employee_name.approved_petty_cash_total",
-        store=True,
         readonly=True
     )
-    remining_petty_cash_balance = fields.Float(string="Remaining Petty Cash Balance")
+    remining_petty_cash_balance = fields.Float(string="Remaining Petty Cash Balance", compute="remining_balance")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
@@ -47,16 +45,19 @@ class PettyCashRequests(models.Model):
         self.state = 'hq_approval'
 
     def action_hq_approve(self):
-        self.state = 'approved'
-
-    def action_approve(self):
         for rec in self:
             if rec.request_amount <= 0:
                 raise UserError("Request amount must be greater than zero.")
-            if rec.request_amount > rec.petty_cash_limit + rec.request_amount:
+            if rec.request_amount > rec.petty_cash_limit:
                 raise UserError("Request exceeds the petty cash limit.")
+            if rec.request_amount > rec.remining_petty_cash_balance:
+                raise UserError("Request exceeds the petty cash remaining balance.")
             rec.employee_name.approved_petty_cash_total += rec.request_amount
             rec.state = "approved"
+
+
+    def action_approve(self):
+        self.state = 'approved'
 
     def action_release(self):
         self.state = 'released'
@@ -64,3 +65,7 @@ class PettyCashRequests(models.Model):
     def action_cancel(self):
         self.state = 'cancelled'
 
+    @api.depends('cash_in_hand', 'petty_cash_limit')
+    def remining_balance(self):
+        for record in self:
+            record.remining_petty_cash_balance = record.petty_cash_limit - record.cash_in_hand
